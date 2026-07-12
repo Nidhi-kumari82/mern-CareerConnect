@@ -64,7 +64,7 @@ const Signup = () => {
   };
   useEffect(() => {
     if (!user) {
-      navigate("signup");
+      navigate("/signup");
     }
   }, [user, navigate]);
   return (
