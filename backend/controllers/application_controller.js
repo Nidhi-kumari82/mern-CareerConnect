@@ -49,6 +49,7 @@ return res.status(201)
         console.log(error)
     }
 };
+
 export const getAppliedJobs=async (req,res)=>{
     try {
         

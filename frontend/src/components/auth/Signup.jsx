@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "../ui/shared/Navbar";
 import { Label } from "@radix-ui/react-label";
 import { Input } from "../ui/input";
@@ -13,6 +13,8 @@ import { setLoading } from "@/redux/authSlice";
 import { Loader2 } from "lucide-react";
 
 const Signup = () => {
+  const { user } = useSelector((store) => store.auth);
+
   const [input, setInput] = useState({
     fullname: "",
     email: "",
@@ -60,7 +62,11 @@ const Signup = () => {
       dispatch(setLoading(false));
     }
   };
-
+  useEffect(() => {
+    if (!user) {
+      navigate("signup");
+    }
+  }, [user, navigate]);
   return (
     <div>
       <Navbar />
@@ -127,7 +133,7 @@ const Signup = () => {
                 <Input
                   type="radio"
                   name="role"
-                  value="recuiter"
+                  value="recruiter"
                   checked={input.role == "recuiter"}
                   onChange={changeEventHandler}
                   className="cursor-pointer "

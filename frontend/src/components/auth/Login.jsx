@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "../ui/shared/Navbar";
 import { Label } from "@radix-ui/react-label";
 import { Input } from "../ui/input";
@@ -12,6 +12,7 @@ import axios from "axios";
 import { Loader2 } from "lucide-react";
 
 const Login = () => {
+  const { user } = useSelector((store) => store.auth);
   const [input, setInput] = useState({
     email: "",
     password: "",
@@ -60,12 +61,20 @@ const Login = () => {
       dispatch(setLoading(false));
     }
   };
+  useEffect(() => {
+    if (!user) {
+      navigate("/login");
+    }
+  }, [user, navigate]);
 
   return (
     <div>
       <Navbar />
       <div className="flex items-center justify-center max-w-7xl mx-auto">
-        <form onSubmit={submitHandler} className="w-1/2 border-gray-200 rounded-md p-4 my-10">
+        <form
+          onSubmit={submitHandler}
+          className="w-1/2 border-gray-200 rounded-md p-4 my-10"
+        >
           <h1 className="font-bold text-xl mb-5">Login</h1>
 
           {/* Email Input */}
@@ -125,7 +134,6 @@ const Login = () => {
             </div>
           </div>
 
-        
           {loading ? (
             <Button className="w-full my-4" disabled>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -137,7 +145,6 @@ const Login = () => {
             </Button>
           )}
 
-      
           <span className="text-sm">
             Don't have an account?
             <Link to="/signup" className="text-blue-700 ml-1">

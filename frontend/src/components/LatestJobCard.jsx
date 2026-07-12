@@ -1,22 +1,49 @@
-import { Badge } from "./ui/badge";
 import React from "react";
+import { Badge } from "./ui/badge";
+import { useNavigate } from "react-router-dom";
 
-const LatestJobCard = () => {
+const LatestJobCard = ({ job }) => {
+  const navigate = useNavigate();
+
   return (
-    <div className="p-5 rounded-md shadow-xl bg-white border border-gray-100 cursor-pointer">
-        <div>
-      <h1 className="font-medium text-lg">Company Name</h1>
-      <p className="text-sm text-gray-500"> India</p>
-      </div>
+    <div
+      onClick={() => navigate(`/description/${job?._id}`)}
+      className="p-5 rounded-md shadow-xl bg-white border border-gray-100 cursor-pointer hover:shadow-2xl hover:-translate-y-1 transition-all duration-300"
+    >
+      {/* Company Info */}
       <div>
-        <h1 className="font-bold text-lg my-2">Job Tittle</h1>
-        <p className="text-sm text-gray-600">Lorem ipsum dolor sit, amet consectetur Lorem ipsum dolor sit amet.
+        <h1 className="font-medium text-lg">
+          {job?.company?.name || "Company Name"}
+        </h1>
+        <p className="text-sm text-gray-500">
+          {job?.location || "India"}
         </p>
       </div>
-      <div className="flex items-center gap-2 mt-4">
-        <Badge className={"text-blue-700 font-bold"} variant="ghost"> 12 Position</Badge>
-        <Badge className={"text-orange-500 font-bold"} variant="ghost"> Part Time</Badge>
-        <Badge className={"text-purple-600font-bold"} variant="ghost"> 24LPA</Badge>
+
+      {/* Job Details */}
+      <div className="mt-2">
+        <h1 className="font-bold text-lg">
+          {job?.title}
+        </h1>
+
+        <p className="text-sm text-gray-600 line-clamp-2 mt-2">
+          {job?.description}
+        </p>
+      </div>
+
+      {/* Badges */}
+      <div className="flex items-center gap-2 mt-4 flex-wrap">
+        <Badge className="text-blue-700 font-bold" variant="ghost">
+          {job?.position} Position
+        </Badge>
+
+        <Badge className="text-orange-500 font-bold" variant="ghost">
+          {job?.jobType}
+        </Badge>
+
+        <Badge className="text-purple-600 font-bold" variant="ghost">
+          {job?.salary ? `${job.salary} LPA` : "Not Disclosed"}
+        </Badge>
       </div>
     </div>
   );
