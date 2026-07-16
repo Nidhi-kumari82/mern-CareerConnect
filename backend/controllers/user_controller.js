@@ -51,38 +51,45 @@ export const login = async (req, res) => {
 
     if (!email || !password || !role) {
       return res.status(400).json({
-        message: "Something is messing",
+        message: "Something is missing",
         success: false,
       });
     }
+
     let user = await User.findOne({ email });
+
     if (!user) {
       return res.status(400).json({
         message: "Incorrect email or password.",
         success: false,
       });
     }
+
     const isPasswordMatch = await bcrypt.compare(password, user.password);
+
     if (!isPasswordMatch) {
       return res.status(400).json({
         message: "Incorrect email or password.",
         success: false,
       });
     }
-    if (role != user.role) {
+
+    if (role !== user.role) {
       return res.status(400).json({
-        message: "Account doesn's exit with current role.",
+        message: "Account doesn't exist with current role.",
         success: false,
       });
     }
 
-    const tokenData = {
-      userId: user._id,
-    };
-    const token = jwt.sign(tokenData, process.env.SECRET_KEY, {
-      expiresIn: "1d",
-    });
-    user = {
+    const token = jwt.sign(
+      { userId: user._id },
+      process.env.SECRET_KEY,
+      {
+        expiresIn: "1d",
+      }
+    );
+
+    const userData = {
       _id: user._id,
       fullname: user.fullname,
       email: user.email,
@@ -90,29 +97,49 @@ export const login = async (req, res) => {
       role: user.role,
       profile: user.profile,
     };
+
     return res
-  .status(200)
-  .cookie("token", token, {
-    maxAge: 24 * 60 * 60 * 1000,
-    httpOnly: true,
-    secure: true,
-    sameSite: "none",
-  })
-  .json({
-    message: `Welcome back ${user.fullname}`,
-    user,
-    success: true,
-  });
-export const logout = async (req, res) => {
-  try {
-    return res.status(200)..cookie("token", "", {
-  maxAge: 0,
-  httpOnly: true,
-  secure: true,
-  sameSite: "none",
-})
+      .status(200)
+      .cookie("token", token, {
+        maxAge: 24 * 60 * 60 * 1000,
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+      })
+      .json({
+        message: `Welcome back ${user.fullname}`,
+        user: userData,
+        success: true,
+      });
   } catch (error) {
     console.log(error);
+    return res.status(500).json({
+      message: "Internal Server Error",
+      success: false,
+    });
+  }
+};
+//LOGOUT
+export const logout = async (req, res) => {
+  try {
+    return res
+      .status(200)
+      .cookie("token", "", {
+        maxAge: 0,
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+      })
+      .json({
+        message: "Logged out successfully.",
+        success: true,
+      });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message: "Internal Server Error",
+      success: false,
+    });
   }
 };
 //UPDATE PROFILE
