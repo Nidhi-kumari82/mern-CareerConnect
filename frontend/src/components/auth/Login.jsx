@@ -61,11 +61,11 @@ const Login = () => {
       dispatch(setLoading(false));
     }
   };
-  useEffect(() => {
-    if (!user) {
-      navigate("/login");
-    }
-  }, [user, navigate]);
+useEffect(() => {
+  if (!user) {
+    navigate("/login");
+  }
+}, [user, navigate]);
 
   return (
     <div>
