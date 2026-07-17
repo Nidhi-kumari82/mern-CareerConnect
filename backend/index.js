@@ -15,7 +15,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 const corsOptions = {
-  origin: "https://mern-careerc-onnect.vercel.app",
+  origin: "https://mern-careerconnect.vercel.app/",
   credentials: true,
 };
 app.use(cors(corsOptions));
